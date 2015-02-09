@@ -1,5 +1,5 @@
 _ = require("lodash")
-Driver  = require('selenium-webdriver')
+Driver  = require('browserstack-webdriver')
 $       = Driver.promise
 
 class @Widget.List extends @Widget

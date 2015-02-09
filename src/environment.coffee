@@ -1,4 +1,4 @@
-Driver = require('selenium-webdriver')
+Driver = require('browserstack-webdriver')
 $      = Driver.promise
 module.exports = ->
 
@@ -118,4 +118,4 @@ module.exports = ->
   # ********************************************************************************#
 
   if process.env.CHROMEDRIVER_PORT
-    require('../node_modules/selenium-webdriver/chrome').ServiceBuilder::port_ = process.env.CHROMEDRIVER_PORT
+    require('../node_modules/browserstack-webdriver/chrome').ServiceBuilder::port_ = process.env.CHROMEDRIVER_PORT

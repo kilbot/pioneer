@@ -1,4 +1,4 @@
-Driver          = require('selenium-webdriver')
+Driver          = require('browserstack-webdriver')
 $               = Driver.promise
 argv            = require('minimist')(process.argv)
 _               = require('lodash')
@@ -6,8 +6,6 @@ color           = require('colors')
 global.timeout  = 5000
 
 module.exports = ->
-  @Driver = Driver
-  
   _Before = @Before
   _After  = @After
 
@@ -42,7 +40,7 @@ module.exports = ->
     .createFlow (flow) =>
       flow.execute =>
         code.apply(@, args)
-    .then (result) -> 
+    .then (result) ->
       successCallback null, result
     , errCallback
 
@@ -81,13 +79,19 @@ module.exports = ->
     @driver.wait(
       (()->
         return keyPress
-    ), Infinity).then -> process.stdin.pause()
+      ), Infinity).then -> process.stdin.pause()
 
   @Before ->
-    @lastStepType = 'Given'
-    if !@driver || !shouldPreventBrowserReload()
-      @driver = new Driver.Builder().withCapabilities(Driver.Capabilities[argv.driver || 'chrome']()).build()
-      @driver.visit = @driver.get
+  @lastStepType = "Given"
+  if not @driver or not shouldPreventBrowserReload()
+    @driver = new Driver.Builder()
+    .usingServer("http://hub.browserstack.com/wd/hub")
+    .withCapabilities(
+      'browserName'       : 'firefox',
+      'browserstack.user' : process.env.BROWSERSTACK_USER,
+      'browserstack.key'  : process.env.BROWSERSTACK_KEY
+    ).build()
+    @driver.visit = @driver.get
 
   @After ->
     terminateDriver() unless shouldPreventBrowserReload()
